@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+openai
+python-dotenv
+rich
+sounddevice
+wavio
+pyttsx3
+gtts
+aiofiles
+python-multipart
+jinja2
+httpx
