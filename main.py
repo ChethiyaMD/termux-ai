@@ -7,7 +7,7 @@ from rich.prompt import Prompt
 from voice import tts_play, record_seconds
 
 load_dotenv()
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_API_KEY ="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"
 MODEL = os.getenv("MODEL", "gpt-3.5-turbo")
 ENABLE_VOICE = os.getenv("ENABLE_VOICE","false").lower() == "true"
 
