@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Chethiya-MD</title>
+<style>
+/* --- Reset & Base --- */
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', system-ui, sans-serif; }
+body {
+  background:#000;
+  color:#00ffcc;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  min-height:100vh;
+  padding:20px;
+  overflow:hidden;
+  position:relative;
+}
+
+/* --- Animated JARVIS Grid Background --- */
+body::before {
+  content:"";
+  position:absolute;
+  top:0; left:0; width:100%; height:100%;
+  background: linear-gradient(0deg, rgba(0,255,204,0.05) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(0,255,204,0.05) 1px, transparent 1px);
+  background-size:40px 40px;
+  z-index:0;
+  animation: moveGrid 20s linear infinite;
+}
+@keyframes moveGrid { from{background-position:0 0;} to{background-position:400px 400px;} }
+
+/* --- Container --- */
+h2 {
+  margin-bottom:16px;
+  text-align:center;
+  color:#00ffcc;
+  text-shadow:0 0 8px #00ffcc;
+  z-index:1;
+  position:relative;
+}
+#chat {
+  width:100%;
+  max-width:800px;
+  height:60vh;
+  padding:12px;
+  background:rgba(0,0,0,0.7);
+  border-radius:12px;
+  border:1px solid #00ffcc;
+  overflow-y:auto;
+  box-shadow: 0 0 20px rgba(0,255,204,0.3);
+  z-index:1;
+  position:relative;
+  animation: pulse 4s infinite alternate;
+}
+
+/* --- Messages --- */
+.msg {
+  margin:8px 0;
+  padding:10px 14px;
+  border-radius:12px;
+  max-width:75%;
+  word-wrap:break-word;
+  transition: all 0.3s ease;
+  opacity:0; animation: fadein 0.5s forwards;
+}
+.user {
+  background:#00ffcc22;
+  color:#00ffcc;
+  text-align:right;
+  align-self:flex-end;
+  box-shadow: 0 0 10px #00ffcc44;
+}
+.bot {
+  background:#111;
+  border:1px solid #00ffcc33;
+  box-shadow: 0 0 10px #00ffcc22;
+}
+
+/* --- Input --- */
+textarea {
+  width:100%;
+  max-width:800px;
+  height:80px;
+  border-radius:12px;
+  border:none;
+  padding:12px;
+  margin-top:12px;
+  background:#111;
+  color:#00ffcc;
+  font-size:16px;
+  resize:none;
+  box-shadow:0 0 10px #00ffcc22 inset;
+  z-index:1; position:relative;
+}
+button {
+  padding:10px 16px;
+  margin-top:8px;
+  border:none;
+  border-radius:12px;
+  background:#00ffcc;
+  color:#111;
+  font-weight:bold;
+  cursor:pointer;
+  box-shadow:0 0 10px #00ffcc66;
+  transition:0.3s;
+  z-index:1; position:relative;
+}
+button:hover { transform: scale(1.05); box-shadow:0 0 20px #00ffccaa; }
+
+/* --- Animations --- */
+@keyframes pulse {
+  0% { box-shadow: 0 0 20px rgba(0,255,204,0.3); }
+  50% { box-shadow: 0 0 40px rgba(0,255,204,0.6); }
+  100% { box-shadow: 0 0 20px rgba(0,255,204,0.3); }
+}
+@keyframes fadein { from{opacity:0} to{opacity:1} }
+
+</style>
+</head>
+<body>
+<h2>Chethiya-MD Web UI</h2>
+<div id="chat"></div>
+<textarea id="input" placeholder="Type your message..."></textarea><br/>
+<button id="send">Send</button>
+
+<script>
+const chat=document.getElementById('chat'),input=document.getElementById('input');
+document.getElementById('send').onclick=async()=>{
+  const text=input.value.trim();if(!text)return;
+  append('You',text,'user');input.value='';
+  append('Chethiya-MD','Thinking...','bot','thinking');
+  try{
+    const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body: JSON.stringify({message:text})});
+    const data=await res.json();updateLastBot(data.reply);
+  }catch(err){updateLastBot('Error: '+err.message);}
+};
+function append(name,text,cls){
+  const d=document.createElement('div');d.className='msg '+cls;d.innerText=text;
+  chat.appendChild(d);chat.scrollTop=chat.scrollHeight;
+}
+function updateLastBot(text){
+  const items=chat.querySelectorAll('.msg.bot');const last=items[items.length-1];if(last)last.innerText=text;
+}
+</script>
+</body>
+  </html>
