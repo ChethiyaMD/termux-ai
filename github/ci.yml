@@ -1,0 +1,16 @@
+name: CI
+on: [push,pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with: python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Lint & basic import
+        run: python -m pyflakes main.py api.py || true
+      - name: Import test
+        run: python -c "import main, api, voice; print('imports ok')"
